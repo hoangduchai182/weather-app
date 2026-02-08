@@ -1,5 +1,5 @@
 'use client';
-
+// File này là trang chính của ứng dụng, kết hợp tất cả các component và quản lý trạng thái toàn cục
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import SearchBar from '@/components/SearchBar';
@@ -16,7 +16,9 @@ import {
 } from '@/lib/weatherApi';
 import { useApp } from '@/contexts/AppContext';
 
+// Trang chính của ứng dụng
 export default function Home() {
+  // Gọi các trạng thái để quản lý dữ liệu thời tiết, dự báo, tải, lỗi và làm mới danh sách yêu thích
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -24,6 +26,7 @@ export default function Home() {
   const [favoritesRefresh, setFavoritesRefresh] = useState(0);
   const { t } = useApp();
 
+  // Lấy dữ liệu thời tiết dựa trên vị trí hiện tại của người dùng khi component được gắn vào
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -57,6 +60,7 @@ export default function Home() {
     }
   }, []);
 
+  // Hàm xử lý tìm kiếm khi người dùng nhập tên thành phố
   const handleSearch = async (city: string) => {
     try {
       setLoading(true);
@@ -75,7 +79,7 @@ export default function Home() {
     }
   };
 
-  // Dynamic gradient based on PRIORITY: Night > Heat > Cold > Weather Condition
+  // Hàm để lấy gradient nền dựa trên dữ liệu thời tiết hiện tại
   const getWeatherGradient = () => {
     if (!weather) return 'from-blue-400 via-purple-400 to-pink-400';
 
@@ -85,28 +89,28 @@ export default function Home() {
     const sunset = weather.sys.sunset;
     const condition = weather.weather[0].main.toLowerCase();
 
-    // PRIORITY 1: Night Time Check (Highest Priority)
-    // If current time is before sunrise OR after sunset = NIGHT
+    // ƯU TIÊN 1: Kiểm tra ban đêm (Ưu tiên cao nhất)
+    // Nếu thời gian hiện tại trước bình minh HOẶC sau hoàng hôn = BAN ĐÊM
     const isNight = currentTime < sunrise || currentTime > sunset;
 
     if (isNight) {
-      // Deep Purple/Indigo/Black gradient for night
+      // Gradient tím đậm/indigo/đen cho ban đêm
       return 'from-indigo-950 via-purple-950 to-slate-950';
     }
 
-    // PRIORITY 2: Daytime - Heat Check (>30°C)
+    // ƯU TIÊN 2: Ban ngày - Kiểm tra nhiệt độ cao (>30°C)
     if (temp > 30) {
       // Warm Orange/Red/Yellow gradient for intense heat
       return 'from-orange-500 via-red-500 to-yellow-500';
     }
 
-    // PRIORITY 3: Daytime - Cold Check (<10°C)
+    // ƯU TIÊN 3: Ban ngày - Kiểm tra nhiệt độ thấp (<10°C)
     if (temp < 10) {
       // Icy White/Pale Blue gradient for cold/winter
       return 'from-slate-200 via-blue-200 to-cyan-200';
     }
 
-    // PRIORITY 4: Daytime - Weather Condition (Fallback for moderate temp 10-30°C)
+    // ƯU TIÊN 4: Ban ngày - Điều kiện thời tiết (Dự phòng cho nhiệt độ vừa phải 10-30°C)
     switch (condition) {
       case 'clear':
         return 'from-sky-400 via-blue-400 to-cyan-400';
@@ -129,7 +133,7 @@ export default function Home() {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${getWeatherGradient()} py-12 px-4 relative overflow-hidden transition-all duration-1000`}>
-      {/* Animated mesh gradient overlay */}
+      {/* Hiệu ứng gradient lưới động */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
@@ -176,6 +180,7 @@ export default function Home() {
         )}
       </div>
 
+      {/* Chân trang */}
       <footer className="text-center mt-16 text-white/80 relative z-10">
         <p className="text-sm font-medium">
           Weather data provided by OpenWeatherMap

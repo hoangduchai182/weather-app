@@ -138,6 +138,7 @@ Edit `.env.local` and add your API key:
 
 ```env
 NEXT_PUBLIC_WEATHER_API_KEY=your_actual_api_key_here
+DATABASE_URL="file:./dev.db"
 ```
 
 ### 5. Run Development Server

@@ -1,5 +1,6 @@
 'use client';
 
+// File này dùng để tạo ngữ cảnh ứng dụng quản lý ngôn ngữ, dịch thuật và các thiết lập chung khác
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type Language = 'EN' | 'VI';
@@ -12,6 +13,7 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+// Đối tượng chứa các bản dịch cho từng ngôn ngữ
 const translations = {
   EN: {
     title: 'Weather',
@@ -61,11 +63,12 @@ const translations = {
   },
 };
 
+// Hàm này dùng để cung cấp ngữ cảnh ứng dụng cho các component con
 export function AppProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('EN');
   const [mounted, setMounted] = useState(false);
 
-  // Load language preference from localStorage
+  // load từ localStorage khi component được gắn vào
   useEffect(() => {
     const savedLanguage = (localStorage.getItem('language') as Language) || 'EN';
     setLanguage(savedLanguage);
@@ -82,7 +85,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return translations[language][key as keyof typeof translations.EN] || key;
   };
 
-  // Prevent flash of wrong content
+  // Ngăn chặn hiện tượng nhấp nháy nội dung sai khi chuyển đổi ngôn ngữ
   if (!mounted) {
     return null;
   }

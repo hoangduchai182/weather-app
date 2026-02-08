@@ -16,27 +16,29 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
   const [loading, setLoading] = useState(false);
   const { t } = useApp();
 
-  // Check if current city is in favorites
+  // Kiểm tra xem thành phố hiện tại có trong danh sách yêu thích hay không
   useEffect(() => {
     const checkFavoriteStatus = async () => {
       try {
+        // Gọi API tới database để lấy danh sách yêu thích
         const res = await fetch('/api/favorites');
         if (!res.ok) return;
         const { favorites } = await res.json();
         setIsFavorite(favorites.some((fav: { city: string }) => fav.city === weather.name));
       } catch (error) {
-        console.error('Failed to check favorite status:', error);
+        console.error('Không thể kiểm tra trạng thái yêu thích:', error);
       }
     };
 
     checkFavoriteStatus();
   }, [weather.name]);
 
+  // Hàm này sử dung để thêm hoặc xóa thành phố khỏi danh sách yêu thích
   const toggleFavorite = async () => {
     setLoading(true);
     try {
       if (isFavorite) {
-        // Remove from favorites
+        // Xóa khỏi danh sách yêu thích
         const res = await fetch(`/api/favorites?city=${encodeURIComponent(weather.name)}`, {
           method: 'DELETE',
         });
@@ -45,7 +47,7 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
           onFavoriteChange?.();
         }
       } else {
-        // Add to favorites
+        // Thêm vào danh sách yêu thích
         const res = await fetch('/api/favorites', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -57,7 +59,7 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
         }
       }
     } catch (error) {
-      console.error('Failed to toggle favorite:', error);
+      console.error('Không thể thay đổi trạng thái yêu thích:', error);
     } finally {
       setLoading(false);
     }
@@ -65,11 +67,11 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
 
   return (
     <div className="backdrop-blur-2xl bg-white/10 rounded-3xl shadow-2xl p-8 md:p-10 max-w-3xl mx-auto border border-white/20 hover:bg-white/15 transition-all duration-300 relative">
-      {/* Favorite Button */}
+      {/* Nút thêm vào yêu thích */}
       <button
         onClick={toggleFavorite}
         disabled={loading}
-        className="absolute top-6 right-6 backdrop-blur-xl bg-white/10 hover:bg-white/20
+        className="absolute top-6 right-6 z-10 backdrop-blur-xl bg-white/10 hover:bg-white/20
                    p-3 rounded-xl border border-white/20 transition-all duration-200
                    hover:scale-110 cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50
                    disabled:opacity-50 disabled:cursor-not-allowed"

@@ -1,6 +1,6 @@
 'use client';
 
-// Debug utility for API calls
+// Hàm debugFetch để ghi log chi tiết các cuộc gọi API và phản hồi
 export async function debugFetch(url: string, options?: RequestInit) {
   console.log(`[API] Calling: ${url}`, options);
 

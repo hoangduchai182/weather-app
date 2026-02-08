@@ -1,3 +1,4 @@
+// khởi tạo các kiểu dữ liệu cho thời tiết và dự báo thời tiết
 export interface WeatherData {
   name: string;
   sys: {

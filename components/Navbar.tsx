@@ -3,7 +3,8 @@
 import { useApp } from '@/contexts/AppContext';
 
 export default function Navbar() {
-  const { language, toggleLanguage, t } = useApp();
+  // Import ngôn ngữ và hàm chuyển đổi ngôn ngữ từ context
+  const { language, toggleLanguage} = useApp();
 
   // Html của Navbar
   return (
@@ -13,7 +14,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                N
+                T
               </div>
               <h2 className="text-white font-bold text-xl hidden sm:block">
                 Trần Duy Trường

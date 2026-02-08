@@ -8,15 +8,18 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ onSearch }: SearchBarProps) {
+  // Trạng thái của ô nhập thành phố
   const [city, setCity] = useState('');
   const { t } = useApp();
 
+  // Khi ấn nút tìm kiếm 
+  // Hiển thị kết quả tìm kiếm và lưu vào lịch sử tìm kiếm
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (city.trim()) {
       onSearch(city.trim());
 
-      // Save to search history
+      // Lưu vào lịch sử tìm kiếm
       try {
         await fetch('/api/history', {
           method: 'POST',
@@ -24,11 +27,12 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           body: JSON.stringify({ city: city.trim() }),
         });
       } catch (error) {
-        console.error('Failed to save search history:', error);
+        console.error('Không thể lưu lịch sử tìm kiếm:', error);
       }
     }
   };
 
+  // Html của SearchBar
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto mb-8">
       <div className="relative">

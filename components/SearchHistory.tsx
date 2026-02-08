@@ -18,6 +18,7 @@ export default function SearchHistory({ onCityClick }: SearchHistoryProps) {
   const [loading, setLoading] = useState(true);
   const { t } = useApp();
 
+  // Lấy lịch sử tìm kiếm từ API khi component được gắn vào
   useEffect(() => {
     const fetchHistory = async () => {
       try {
@@ -38,6 +39,7 @@ export default function SearchHistory({ onCityClick }: SearchHistoryProps) {
     fetchHistory();
   }, []);
 
+  // Hàm để xóa toàn bộ lịch sử tìm kiếm
   const clearHistory = async () => {
     try {
       await fetch('/api/history', { method: 'DELETE' });
@@ -55,6 +57,7 @@ export default function SearchHistory({ onCityClick }: SearchHistoryProps) {
     return null;
   }
 
+  // Html của SearchHistory
   return (
     <div className="backdrop-blur-2xl bg-white/10 rounded-2xl shadow-xl p-6 max-w-xl mx-auto mb-6 border border-white/20">
       <div className="flex items-center justify-between mb-4">

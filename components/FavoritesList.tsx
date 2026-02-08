@@ -16,22 +16,24 @@ interface Favorite {
 }
 
 export default function FavoritesList({ onCityClick, refreshTrigger }: FavoritesListProps) {
+  // Khởi tạo trạng thái cho danh sách yêu thích và trạng thái tải
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState(true);
   const { t } = useApp();
 
+  // Lấy danh sách yêu thích từ API khi component được gắn vào hoặc khi refreshTrigger thay đổi
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
         const res = await fetch('/api/favorites');
         if (!res.ok) {
-          console.error('Failed to fetch favorites:', res.statusText);
+          console.error('Không thể lấy danh sách yêu thích:', res.statusText);
           return;
         }
         const data = await res.json();
         setFavorites(data.favorites || []);
       } catch (error) {
-        console.error('Failed to fetch favorites:', error);
+        console.error('Không thể lấy danh sách yêu thích:', error);
       } finally {
         setLoading(false);
       }
@@ -40,6 +42,7 @@ export default function FavoritesList({ onCityClick, refreshTrigger }: Favorites
     fetchFavorites();
   }, [refreshTrigger]);
 
+  // Hàm để xóa một thành phố khỏi danh sách yêu thích
   const removeFavorite = async (city: string, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
@@ -48,7 +51,7 @@ export default function FavoritesList({ onCityClick, refreshTrigger }: Favorites
       });
       setFavorites(favorites.filter((fav) => fav.city !== city));
     } catch (error) {
-      console.error('Failed to remove favorite:', error);
+      console.error('Không thể xóa khỏi danh sách yêu thích:', error);
     }
   };
 
@@ -60,6 +63,7 @@ export default function FavoritesList({ onCityClick, refreshTrigger }: Favorites
     return null;
   }
 
+  // Html của danh sách yêu thích
   return (
     <div className="backdrop-blur-2xl bg-white/10 rounded-2xl shadow-xl p-6 max-w-xl mx-auto mb-8 border border-white/20">
       <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
@@ -86,7 +90,8 @@ export default function FavoritesList({ onCityClick, refreshTrigger }: Favorites
               onClick={(e) => removeFavorite(favorite.city, e)}
               className="opacity-0 group-hover:opacity-100 transition-opacity duration-200
                          text-red-400 hover:text-red-300 p-1"
-              aria-label="Remove from favorites"
+              aria-label={t('removeFromFavorites')}
+              title={t('removeFromFavorites')}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
