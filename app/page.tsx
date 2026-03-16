@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import SearchBar from '@/components/SearchBar';
 import WeatherCard from '@/components/WeatherCard';
-import ForecastCard from '@/components/ForecastCard';
+import DailyForecast from '@/components/DailyForecast';
+import HourlyForecast from '@/components/HourlyForecast';
 import SearchHistory from '@/components/SearchHistory';
 import FavoritesList from '@/components/FavoritesList';
 import { WeatherData, ForecastData } from '@/types/weather';
@@ -169,9 +170,25 @@ export default function Home() {
           </div>
         )}
 
-        {weather && !loading && <WeatherCard weather={weather} onFavoriteChange={() => setFavoritesRefresh(prev => prev + 1)} />}
-
-        {forecast && !loading && <ForecastCard forecast={forecast} />}
+        <div className="flex flex-col lg:flex-row gap-6 w-full mt-8 items-stretch">
+          {forecast && !loading && (
+            <div className="w-full lg:w-1/4">
+              <DailyForecast forecast={forecast} />
+            </div>
+          )}
+          
+          {weather && !loading && (
+            <div className="w-full lg:w-2/4">
+              <WeatherCard weather={weather} onFavoriteChange={() => setFavoritesRefresh(prev => prev + 1)} />
+            </div>
+          )}
+          
+          {forecast && !loading && (
+            <div className="w-full lg:w-1/4">
+              <HourlyForecast forecast={forecast} />
+            </div>
+          )}
+        </div>
 
         {!weather && !loading && !error && (
           <div className="text-center text-white text-xl backdrop-blur-md bg-white/10 p-8 rounded-2xl max-w-2xl mx-auto border border-white/20">

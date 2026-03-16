@@ -1,22 +1,25 @@
 'use client';
 
 import { WeatherData } from '@/types/weather';
-import { getWeatherIcon, getWindDirection } from '@/lib/utils';
+import { getWeatherIcon, getWindDirection, formatTemp } from '@/lib/utils';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useApp } from '@/contexts/AppContext';
 
 interface WeatherCardProps {
-  weather: WeatherData;
-  onFavoriteChange?: () => void;
+  weather: WeatherData;                   // Dữ liệu thời tiết hiện tại
+  onFavoriteChange?: () => void;          // Callback khi trạng thái yêu thích thay đổi (để cập nhật giao diện)
 }
 
 export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardProps) {
+  // Trạng thái lưu trữ xem thành phố này đã được theo dõi/yêu thích chưa
   const [isFavorite, setIsFavorite] = useState(false);
+  // Trạng thái loading khi đang call API thêm/bớt yêu thích
   const [loading, setLoading] = useState(false);
-  const { t } = useApp();
+  // Lấy hàm dịch (t) và đơn vị nhiệt độ (C/F) (unit) từ context chung
+  const { t, unit } = useApp();
 
-  // Kiểm tra xem thành phố hiện tại có trong danh sách yêu thích hay không
+  // Kiểm tra xem thành phố hiện tại có nằm trong danh sách yêu thích hay không (khi component mount hoặc khi đổi thành phố)
   useEffect(() => {
     const checkFavoriteStatus = async () => {
       try {
@@ -66,7 +69,7 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
   };
 
   return (
-    <div className="backdrop-blur-2xl bg-white/10 rounded-3xl shadow-2xl p-8 md:p-10 max-w-3xl mx-auto border border-white/20 hover:bg-white/15 transition-all duration-300 relative">
+    <div className="backdrop-blur-2xl bg-white/10 rounded-3xl shadow-2xl p-8 md:p-10 w-full max-w-3xl lg:max-w-none mx-auto border border-white/20 hover:bg-white/15 transition-all duration-300 relative h-full flex flex-col justify-center">
       {/* Nút thêm vào yêu thích */}
       <button
         onClick={toggleFavorite}
@@ -79,9 +82,8 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
         title={isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
       >
         <svg
-          className={`w-6 h-6 transition-colors duration-200 ${
-            isFavorite ? 'fill-red-400 stroke-red-400' : 'fill-none stroke-white'
-          }`}
+          className={`w-6 h-6 transition-colors duration-200 ${isFavorite ? 'fill-red-400 stroke-red-400' : 'fill-none stroke-white'
+            }`}
           viewBox="0 0 24 24"
           strokeWidth={2}
         >
@@ -93,6 +95,7 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
         </svg>
       </button>
 
+      {/* Tên thành phố và Mô tả thời tiết */}
       <div className="text-center mb-8">
         <h2 className="text-5xl md:text-6xl font-bold text-white mb-2 drop-shadow-lg">
           {weather.name}, {weather.sys.country}
@@ -102,6 +105,7 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
         </p>
       </div>
 
+      {/* Hiển thị Icon thời tiết siêu lớn và nhiệt độ hiện tại */}
       <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-8">
         <div className="relative">
           <div className="absolute inset-0 bg-white/20 rounded-full blur-2xl"></div>
@@ -114,15 +118,16 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
           />
         </div>
         <div className="text-8xl md:text-9xl font-bold text-white drop-shadow-2xl">
-          {Math.round(weather.main.temp)}°
+          {formatTemp(weather.main.temp, unit)}
         </div>
       </div>
 
+      {/* Box lưới phụ hiển thị Cảm giác như, Độ ẩm, Tốc gió, Hướng gió..v.v.. */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-10">
         <div className="backdrop-blur-xl bg-white/10 p-5 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
           <p className="text-white/70 text-sm font-medium mb-1">{t('feelsLike')}</p>
           <p className="text-3xl font-bold text-white">
-            {Math.round(weather.main.feels_like)}°C
+            {formatTemp(weather.main.feels_like, unit)}
           </p>
         </div>
 

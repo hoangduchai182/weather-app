@@ -3,8 +3,8 @@
 import { useApp } from '@/contexts/AppContext';
 
 export default function Navbar() {
-  // Import ngôn ngữ và hàm chuyển đổi ngôn ngữ từ context
-  const { language, toggleLanguage} = useApp();
+  // Import ngôn ngữ, đơn vị nhiệt độ và hàm chuyển đổi từ context
+  const { language, toggleLanguage, unit, toggleUnit } = useApp();
 
   // Html của Navbar
   return (
@@ -22,6 +22,20 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* Nút chuyển đổi đơn vị phần hiển thị nhiệt độ (Độ C / Độ F) */}
+              <button
+                onClick={toggleUnit}
+                className="backdrop-blur-xl bg-white/10 hover:bg-white/20
+                           px-4 py-2 rounded-xl border border-white/20
+                           text-white font-semibold transition-all duration-200
+                           hover:scale-105 cursor-pointer flex items-center gap-2
+                           focus:outline-none focus:ring-2 focus:ring-white/50"
+                aria-label="Toggle Temperature Unit"
+              >
+                <span className="text-lg">°{unit}</span>
+              </button>
+              
+              {/* Nút bấm chuyển đổi đa ngôn ngữ hiển thị icon và tên ngôn ngữ hiện tại */}
               <button
                 onClick={toggleLanguage}
                 className="backdrop-blur-xl bg-white/10 hover:bg-white/20

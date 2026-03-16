@@ -3,14 +3,16 @@ export function getWeatherIcon(iconCode: string): string {
   return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 }
 
-// Hàm lấy hướng gió từ góc độ
+// Hàm lấy hướng gió từ góc độ (0 đến 360 độ)
 export function getWindDirection(deg: number): string {
+  // Mảng 8 hướng chính của la bàn
   const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  // Chia 360 độ cho 45 để lấy index (mỗi hướng chiếm 45 độ), chia lấy phần dư do vòng tròn (để 360 độ quay lại N=0)
   const index = Math.round(deg / 45) % 8;
   return directions[index];
 }
 
-// Hàm định dạng ngày giờ từ timestamp
+// Hàm định dạng ngày giờ từ timestamp (dịch sang Date form ngắn gọn chuẩn Anh-Mỹ)
 export function formatDateTime(timestamp: number): string {
   return new Date(timestamp * 1000).toLocaleString('en-US', {
     weekday: 'short',
@@ -36,4 +38,14 @@ export function formatDate(timestamp: number): string {
     month: 'short',
     day: 'numeric',
   });
+}
+
+// Hàm định dạng nhiệt độ theo đơn vị C hoặc F
+export function formatTemp(tempCelsius: number, unit: 'C' | 'F'): string {
+  if (unit === 'F') {
+    // Công thức chuyển từ C sang F: (C * 9/5) + 32, và dùng Math.round để làm tròn số nguyên gần nhất
+    return `${Math.round(tempCelsius * 9 / 5 + 32)}°F`;
+  }
+  // Nếu là C thì chỉ cần làm tròn số liệu nhiệt độ gốc
+  return `${Math.round(tempCelsius)}°C`;
 }
