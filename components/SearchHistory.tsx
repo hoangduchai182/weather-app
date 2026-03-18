@@ -5,6 +5,7 @@ import { useApp } from '@/contexts/AppContext';
 
 interface SearchHistoryProps {
   onCityClick: (city: string) => void;
+  onDataChange?: (hasData: boolean) => void;
 }
 
 interface SearchHistoryItem {
@@ -13,7 +14,7 @@ interface SearchHistoryItem {
   searchedAt: string;
 }
 
-export default function SearchHistory({ onCityClick }: SearchHistoryProps) {
+export default function SearchHistory({ onCityClick, onDataChange }: SearchHistoryProps) {
   const [history, setHistory] = useState<SearchHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { t } = useApp();
@@ -28,7 +29,11 @@ export default function SearchHistory({ onCityClick }: SearchHistoryProps) {
           return;
         }
         const data = await res.json();
-        setHistory(data.history || []);
+        const historyData = data.history || [];
+        setHistory(historyData);
+        if (onDataChange) {
+          onDataChange(historyData.length > 0);
+        }
       } catch (error) {
         console.error('Failed to fetch history:', error);
       } finally {
@@ -44,6 +49,9 @@ export default function SearchHistory({ onCityClick }: SearchHistoryProps) {
     try {
       await fetch('/api/history', { method: 'DELETE' });
       setHistory([]);
+      if (onDataChange) {
+        onDataChange(false);
+      }
     } catch (error) {
       console.error('Failed to clear history:', error);
     }
@@ -59,9 +67,9 @@ export default function SearchHistory({ onCityClick }: SearchHistoryProps) {
 
   // Html của SearchHistory
   return (
-    <div className="backdrop-blur-2xl bg-white/10 rounded-2xl shadow-xl p-6 max-w-xl mx-auto mb-6 border border-white/20">
+    <div className="w-full backdrop-blur-2xl bg-white/10 rounded-2xl shadow-xl p-6 mx-auto mb-6 border border-white/20">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold text-white flex items-center gap-2">
+        <h3 className="text-md sm:text-xl font-bold text-white flex items-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>

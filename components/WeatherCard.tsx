@@ -96,8 +96,8 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
       </button>
 
       {/* Tên thành phố và Mô tả thời tiết */}
-      <div className="text-center mb-8">
-        <h2 className="text-5xl md:text-6xl font-bold text-white mb-2 drop-shadow-lg">
+      <div className="text-center mb-4">
+        <h2 className="text-2xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">
           {weather.name}, {weather.sys.country}
         </h2>
         <p className="text-white/80 mt-3 capitalize text-xl md:text-2xl font-light">
@@ -106,62 +106,62 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
       </div>
 
       {/* Hiển thị Icon thời tiết siêu lớn và nhiệt độ hiện tại */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-8">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-4">
         <div className="relative">
           <div className="absolute inset-0 bg-white/20 rounded-full blur-2xl"></div>
           <Image
             src={getWeatherIcon(weather.weather[0].icon)}
             alt={weather.weather[0].description}
-            width={160}
-            height={160}
+            width={120}
+            height={120}
             className="relative z-10 drop-shadow-2xl"
           />
         </div>
-        <div className="text-8xl md:text-9xl font-bold text-white drop-shadow-2xl">
+        <div className="text-5xl md:text-6xl font-bold text-white drop-shadow-2xl">
           {formatTemp(weather.main.temp, unit)}
         </div>
       </div>
 
       {/* Box lưới phụ hiển thị Cảm giác như, Độ ẩm, Tốc gió, Hướng gió..v.v.. */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-10">
-        <div className="backdrop-blur-xl bg-white/10 p-5 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+        <div className="backdrop-blur-xl bg-white/10 p-3 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
           <p className="text-white/70 text-sm font-medium mb-1">{t('feelsLike')}</p>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-md font-bold text-white">
             {formatTemp(weather.main.feels_like, unit)}
           </p>
         </div>
 
-        <div className="backdrop-blur-xl bg-white/10 p-5 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
+        <div className="backdrop-blur-xl bg-white/10 p-3 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
           <p className="text-white/70 text-sm font-medium mb-1">{t('humidity')}</p>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-md font-bold text-white">
             {weather.main.humidity}%
           </p>
         </div>
 
-        <div className="backdrop-blur-xl bg-white/10 p-5 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
+        <div className="backdrop-blur-xl bg-white/10 p-3 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
           <p className="text-white/70 text-sm font-medium mb-1">{t('windSpeed')}</p>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-md font-bold text-white">
             {weather.wind.speed} m/s
           </p>
         </div>
 
-        <div className="backdrop-blur-xl bg-white/10 p-5 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
+        <div className="backdrop-blur-xl bg-white/10 p-3 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
           <p className="text-white/70 text-sm font-medium mb-1">{t('windDirection')}</p>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-md font-bold text-white">
             {getWindDirection(weather.wind.deg)}
           </p>
         </div>
 
-        <div className="backdrop-blur-xl bg-white/10 p-5 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
+        <div className="backdrop-blur-xl bg-white/10 p-3 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
           <p className="text-white/70 text-sm font-medium mb-1">{t('pressure')}</p>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-md font-bold text-white">
             {weather.main.pressure} hPa
           </p>
         </div>
 
-        <div className="backdrop-blur-xl bg-white/10 p-5 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
+        <div className="backdrop-blur-xl bg-white/10 p-3 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
           <p className="text-white/70 text-sm font-medium mb-1">{t('cloudiness')}</p>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-md font-bold text-white">
             {weather.clouds.all}%
           </p>
         </div>

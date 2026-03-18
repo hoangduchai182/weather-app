@@ -34,7 +34,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
 
   // Html của SearchBar
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto mb-8">
+    <form onSubmit={handleSubmit} className="w-full mx-auto mb-8">
       <div className="relative">
         <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
           <svg
@@ -56,7 +56,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           value={city}
           onChange={(e) => setCity(e.target.value)}
           placeholder={t('search')}
-          className="w-full pl-12 pr-32 py-4 rounded-2xl backdrop-blur-xl bg-white/20 border border-white/30
+          className="w-full pl-6 md:pl-12 pr-32 py-4 rounded-2xl backdrop-blur-xl bg-white/20 border border-white/30
                      focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50
                      text-white placeholder-white/60 font-medium text-lg
                      transition-all duration-200 shadow-lg"

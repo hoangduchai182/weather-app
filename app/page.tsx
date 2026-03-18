@@ -25,7 +25,11 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [favoritesRefresh, setFavoritesRefresh] = useState(0);
+  const [hasHistory, setHasHistory] = useState(false);
+  const [hasFavorites, setHasFavorites] = useState(false);
   const { t } = useApp();
+
+  const hasSidebarContent = hasHistory || hasFavorites;
 
   // Lấy dữ liệu thời tiết dựa trên vị trí hiện tại của người dùng khi component được gắn vào
   useEffect(() => {
@@ -152,49 +156,59 @@ export default function Home() {
           </p>
         </header>
 
-        <SearchBar onSearch={handleSearch} />
+        <div className="flex flex-col gap-8 w-full mt-8">
+          {/* Box 1 (Tìm Kiếm, Gần Đây, Yêu Thích) và Box 2 (Kết Quả Tính Toán) ngang nhau trên Desktop nếu có dữ liệu */}
+          <div className={`flex flex-col gap-6 items-stretch ${hasSidebarContent ? 'lg:flex-row' : 'items-center justify-center'}`}>
 
-        <SearchHistory onCityClick={handleSearch} />
-        <FavoritesList onCityClick={handleSearch} refreshTrigger={favoritesRefresh} />
-
-        {loading && (
-          <div className="text-center text-white text-xl">
-            <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-white/30 border-t-white"></div>
-            <p className="mt-4 font-medium">{t('loading')}</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="backdrop-blur-xl bg-red-500/20 border border-red-300/50 text-white px-6 py-4 rounded-2xl max-w-2xl mx-auto shadow-lg">
-            {error}
-          </div>
-        )}
-
-        <div className="flex flex-col lg:flex-row gap-6 w-full mt-8 items-stretch">
-          {forecast && !loading && (
-            <div className="w-full lg:w-1/4">
-              <DailyForecast forecast={forecast} />
+            {/* Box 1: Tìm Kiếm, Lịch Sử, Yêu Thích */}
+            <div className={`w-full bg-white/10 rounded-3xl shadow-2xl p-6 md:p-8 border border-white/20 ${hasSidebarContent ? 'lg:w-1/2' : 'max-w-xl mx-auto'}`}>
+              <SearchBar onSearch={handleSearch} />
+              <SearchHistory onCityClick={handleSearch} onDataChange={setHasHistory} />
+              <div className="flex-1 min-h-0">
+                <FavoritesList onCityClick={handleSearch} refreshTrigger={favoritesRefresh} onDataChange={setHasFavorites} />
+              </div>
             </div>
-          )}
-          
-          {weather && !loading && (
-            <div className="w-full lg:w-2/4">
-              <WeatherCard weather={weather} onFavoriteChange={() => setFavoritesRefresh(prev => prev + 1)} />
+
+            {/* Box 2: Weather Card */}
+            <div className={`w-full ${hasSidebarContent ? 'lg:w-1/2' : 'max-w-xl mx-auto'}`}>
+              {loading && (
+                <div className="text-center text-white text-xl flex-1 flex flex-col items-center justify-center py-12 backdrop-blur-2xl bg-white/10 rounded-3xl shadow-2xl border border-white/20">
+                  <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-white/30 border-t-white"></div>
+                  <p className="mt-4 font-medium">{t('loading')}</p>
+                </div>
+              )}
+
+              {error && (
+                <div className="backdrop-blur-xl bg-red-500/20 border border-red-300/50 text-white px-6 py-4 rounded-2xl w-full shadow-lg">
+                  {error}
+                </div>
+              )}
+
+              {weather && !loading && (
+                <WeatherCard weather={weather} onFavoriteChange={() => setFavoritesRefresh(prev => prev + 1)} />
+              )}
+
+              {!weather && !loading && !error && (
+                <div className="text-center text-white text-xl backdrop-blur-2xl bg-white/10 p-8 rounded-3xl shadow-2xl w-full border border-white/20 flex-1 flex items-center justify-center py-20">
+                  Search for a city to see the weather
+                </div>
+              )}
             </div>
-          )}
-          
+          </div>
+
+          {/* Dự Báo 5 Ngày và Dự Báo Theo Giờ - Nằm ngang và xếp chồng dọc */}
           {forecast && !loading && (
-            <div className="w-full lg:w-1/4">
-              <HourlyForecast forecast={forecast} />
+            <div className="flex flex-col gap-8 w-full mt-4">
+              <div className="w-full">
+                <DailyForecast forecast={forecast} />
+              </div>
+
+              <div className="w-full">
+                <HourlyForecast forecast={forecast} />
+              </div>
             </div>
           )}
         </div>
-
-        {!weather && !loading && !error && (
-          <div className="text-center text-white text-xl backdrop-blur-md bg-white/10 p-8 rounded-2xl max-w-2xl mx-auto border border-white/20">
-            Search for a city to see the weather
-          </div>
-        )}
       </div>
 
       {/* Chân trang */}

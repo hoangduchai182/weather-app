@@ -6,6 +6,7 @@ import { useApp } from '@/contexts/AppContext';
 interface FavoritesListProps {
   onCityClick: (city: string) => void;
   refreshTrigger?: number;
+  onDataChange?: (hasData: boolean) => void;
 }
 
 interface Favorite {
@@ -15,7 +16,7 @@ interface Favorite {
   addedAt: string;
 }
 
-export default function FavoritesList({ onCityClick, refreshTrigger }: FavoritesListProps) {
+export default function FavoritesList({ onCityClick, refreshTrigger, onDataChange }: FavoritesListProps) {
   // Khởi tạo trạng thái cho danh sách yêu thích và trạng thái tải
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,11 @@ export default function FavoritesList({ onCityClick, refreshTrigger }: Favorites
           return;
         }
         const data = await res.json();
-        setFavorites(data.favorites || []);
+        const favs = data.favorites || [];
+        setFavorites(favs);
+        if (onDataChange) {
+          onDataChange(favs.length > 0);
+        }
       } catch (error) {
         console.error('Không thể lấy danh sách yêu thích:', error);
       } finally {
@@ -49,7 +54,11 @@ export default function FavoritesList({ onCityClick, refreshTrigger }: Favorites
       await fetch(`/api/favorites?city=${encodeURIComponent(city)}`, {
         method: 'DELETE',
       });
-      setFavorites(favorites.filter((fav) => fav.city !== city));
+      const newFavs = favorites.filter((fav) => fav.city !== city);
+      setFavorites(newFavs);
+      if (onDataChange) {
+        onDataChange(newFavs.length > 0);
+      }
     } catch (error) {
       console.error('Không thể xóa khỏi danh sách yêu thích:', error);
     }
@@ -65,7 +74,7 @@ export default function FavoritesList({ onCityClick, refreshTrigger }: Favorites
 
   // Html của danh sách yêu thích
   return (
-    <div className="backdrop-blur-2xl bg-white/10 rounded-2xl shadow-xl p-6 max-w-xl mx-auto mb-8 border border-white/20">
+    <div className="w-full backdrop-blur-2xl bg-white/10 rounded-2xl shadow-xl p-6 mx-auto mb-8 border border-white/20">
       <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
         <svg className="w-5 h-5 fill-red-400 stroke-red-400" viewBox="0 0 24 24" strokeWidth={2}>
           <path

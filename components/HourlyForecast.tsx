@@ -55,28 +55,27 @@ export default function HourlyForecast({ forecast }: HourlyForecastProps) {
       <h4 className="text-2xl xl:text-3xl font-bold text-white mb-6 drop-shadow-lg">{t('forecastHourly')}</h4>
       
       <div 
-        className={`overflow-x-auto lg:overflow-x-hidden lg:overflow-y-auto custom-scrollbar flex-1 flex flex-col ${isDragging ? 'cursor-grabbing lg:cursor-auto' : 'cursor-grab lg:cursor-auto'}`}
+        className={`overflow-x-auto custom-scrollbar flex-1 flex flex-col ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
         ref={scrollRef}
         onMouseDown={onMouseDown}
         onMouseLeave={onMouseLeave}
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}
       >
-        <div className="flex lg:flex-col gap-4 pb-4 lg:pb-0 lg:pr-2">
+        <div className="flex gap-4 pb-4 w-full">
           {/* Dự báo hàng giờ (24 giờ tới) */}
           {forecast.list.slice(0, 8).map((item) => (
             <div
               key={item.dt}
-              className="backdrop-blur-xl bg-white/10 p-5 lg:p-4 rounded-2xl min-w-[150px] lg:min-w-0 lg:w-full text-center border border-white/20
-                         hover:bg-white/15 hover:scale-105 lg:hover:scale-[1.02] lg:flex lg:items-center lg:justify-between lg:text-left transition-all duration-200 flex-shrink-0 select-none group"
+              className="backdrop-blur-xl bg-white/10 p-5 rounded-2xl min-w-[140px] flex-1 text-center border border-white/20 hover:bg-white/15 hover:scale-105 transition-all duration-200 flex-shrink-0 select-none group"
             >
-              <div className="lg:flex lg:flex-col lg:items-start lg:w-16">
-                <p className="font-bold text-white text-base lg:mb-0 mb-3">
+              <div>
+                <p className="font-bold text-white text-base mb-3">
                   {formatTime(item.dt)}
                 </p>
               </div>
               
-              <div className="relative w-16 h-16 lg:w-12 lg:h-12 mx-auto lg:mx-0">
+              <div className="relative w-16 h-16 mx-auto">
                 <Image
                   src={getWeatherIcon(item.weather[0].icon)}
                   alt={item.weather[0].description}
@@ -86,12 +85,12 @@ export default function HourlyForecast({ forecast }: HourlyForecastProps) {
                 />
               </div>
               
-              <p className="text-3xl lg:text-2xl font-bold text-white my-3 lg:my-0 drop-shadow-lg lg:w-16 lg:text-right">
+              <p className="text-3xl font-bold text-white my-3 drop-shadow-lg">
                 {formatTemp(item.main.temp, unit)}
               </p>
               
-              <div className="flex justify-center items-center gap-1 text-sm lg:text-xs text-white/70 font-medium lg:w-12 lg:justify-end">
-                <svg className="w-4 h-4 lg:hidden" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex justify-center items-center gap-1 text-sm text-white/70 font-medium">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.5 2a3.5 3.5 0 101.665 6.58L8.585 10l-1.42 1.42a3.5 3.5 0 101.414 1.414l8.128-8.127a1 1 0 00-1.414-1.414L10 8.586 8.58 7.165A3.5 3.5 0 005.5 2zM4 5.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" clipRule="evenodd" />
                 </svg>
                 {item.main.humidity}%
