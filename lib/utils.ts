@@ -49,3 +49,13 @@ export function formatTemp(tempCelsius: number, unit: 'C' | 'F'): string {
   // Nếu là C thì chỉ cần làm tròn số liệu nhiệt độ gốc
   return `${Math.round(tempCelsius)}°C`;
 }
+
+// Hàm định dạng tốc độ gió theo đơn vị nhiệt độ
+// Khi đơn vị là C: giữ nguyên m/s (đơn vị gốc từ API)
+// Khi đơn vị là F: chuyển sang km/h (m/s × 3.6)
+export function formatWindSpeed(speedMs: number, unit: 'C' | 'F'): string {
+  if (unit === 'F') {
+    return `${Math.round(speedMs * 3.6)} km/h`;
+  }
+  return `${Math.round(speedMs * 10) / 10} m/s`;
+}
