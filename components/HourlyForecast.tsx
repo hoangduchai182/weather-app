@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { ForecastData } from '@/types/weather';
-import { getWeatherIcon, formatTime, formatTemp } from '@/lib/utils';
+import { getWeatherIcon, formatTime, formatTemp, formatDewPoint } from '@/lib/utils';
 import Image from 'next/image';
 import { useApp } from '@/contexts/AppContext';
 
@@ -93,7 +93,7 @@ export default function HourlyForecast({ forecast }: HourlyForecastProps) {
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.5 2a3.5 3.5 0 101.665 6.58L8.585 10l-1.42 1.42a3.5 3.5 0 101.414 1.414l8.128-8.127a1 1 0 00-1.414-1.414L10 8.586 8.58 7.165A3.5 3.5 0 005.5 2zM4 5.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" clipRule="evenodd" />
                 </svg>
-                {item.main.humidity}%
+                {unit === 'F' ? formatDewPoint(item.main.temp, item.main.humidity, unit) : `${item.main.humidity}%`}
               </div>
             </div>
           ))}

@@ -59,3 +59,15 @@ export function formatWindSpeed(speedMs: number, unit: 'C' | 'F'): string {
   }
   return `${Math.round(speedMs * 10) / 10} m/s`;
 }
+
+// Hàm tính và định dạng điểm sương (Dew Point) theo công thức phương Tây
+// Công thức: điểm sương = nhiệt độ - (100 - độ ẩm) / 5
+// Khi đơn vị là F: tính điểm sương bằng °C rồi chuyển sang °F
+// Khi đơn vị là C: giữ nguyên °C
+export function formatDewPoint(tempCelsius: number, humidity: number, unit: 'C' | 'F'): string {
+  const dewPointC = tempCelsius - (100 - humidity) / 5;
+  if (unit === 'F') {
+    return `${Math.round(dewPointC * 9 / 5 + 32)}°F`;
+  }
+  return `${Math.round(dewPointC)}°C`;
+}

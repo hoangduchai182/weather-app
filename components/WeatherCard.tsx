@@ -1,7 +1,7 @@
 'use client';
 
 import { WeatherData } from '@/types/weather';
-import { getWeatherIcon, getWindDirection, formatTemp, formatWindSpeed } from '@/lib/utils';
+import { getWeatherIcon, getWindDirection, formatTemp, formatWindSpeed, formatDewPoint } from '@/lib/utils';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useApp } from '@/contexts/AppContext';
@@ -132,9 +132,9 @@ export default function WeatherCard({ weather, onFavoriteChange }: WeatherCardPr
         </div>
 
         <div className="backdrop-blur-xl bg-white/10 p-3 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-200">
-          <p className="text-white/70 text-sm font-medium mb-1">{t('humidity')}</p>
+          <p className="text-white/70 text-sm font-medium mb-1">{unit === 'F' ? t('dewPoint') : t('humidity')}</p>
           <p className="text-md font-bold text-white">
-            {weather.main.humidity}%
+            {unit === 'F' ? formatDewPoint(weather.main.temp, weather.main.humidity, unit) : `${weather.main.humidity}%`}
           </p>
         </div>
 
